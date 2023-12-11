@@ -23,6 +23,16 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
 
+// Import $tera / @iebh/Tera-fy global service
+// FIX: Have to be explicit here to exactly what we're after as the older version of Vue-cli doesn't resolve it automatically
+import TeraFy from '@iebh/tera-fy/lib/terafy.client.js';
+import TerafyVue from '@iebh/tera-fy/plugins/vue2';
+let terafy = new TeraFy()
+	.set('devMode', true) // Uncomment this line if you want TeraFy to be chatty
+	.set('siteUrl', 'http://localhost:8000/embed') // Uncomment this line if running TERA locally
+	.use(TerafyVue) // Add the Vue plugin
+	// NOTE: See bottom of file inside main async() init loop for when TeraFy actually boots
+
 Vue.config.productionTip = false;
 
 // Register all Input/Base Components Globally {{{
@@ -66,9 +76,13 @@ requireComponent.keys().forEach(fileName => {
 
 (async () => {
 	const router = await initializeRouter();
-	new Vue({
+	const app = new Vue({
 		router,
 		store,
 		render: h => h(App)
-	}).$mount("#app");
+	});
+	app.$mount("#app");
+
+	// Boot teraFy + require project + pull & subscribe to project data
+	await terafy.init({app});
 })();
