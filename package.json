@@ -3,9 +3,10 @@
   "version": "0.5.0",
   "private": true,
   "scripts": {
-    "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "serve": "cross-env NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve"
   },
   "author": [
     "Connor Forbes <cforbes.software@gmail.com> (https://github.com/connorf25)",
