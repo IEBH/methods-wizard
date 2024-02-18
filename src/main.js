@@ -1,6 +1,9 @@
 import Vue from "vue";
 import App from "./App.vue";
 
+// Disable Vue chattyness
+Vue.config.productionTip = false;
+
 // Setup vue router
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
@@ -24,16 +27,13 @@ import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
 
 // Import $tera / @iebh/Tera-fy global service
-// FIX: Have to be explicit here to exactly what we're after as the older version of Vue-cli doesn't resolve it automatically
-import TeraFy from '@iebh/tera-fy/lib/terafy.client.js';
+import TeraFy from '@iebh/tera-fy/lib/terafy.client.js'; // FIX: Have to be explicit to exactly what we're after as the older version of Vue-cli doesn't resolve it automatically
 import TerafyVue from '@iebh/tera-fy/plugins/vue2';
 let terafy = new TeraFy()
 	.set('devMode', true) // Uncomment this line if you want TeraFy to be chatty
 	.set('siteUrl', 'http://localhost:8000/embed') // Uncomment this line if running TERA locally
 	.use(TerafyVue) // Add the Vue plugin
 	// NOTE: See bottom of file inside main async() init loop for when TeraFy actually boots
-
-Vue.config.productionTip = false;
 
 // Register all Input/Base Components Globally {{{
 import upperFirst from "lodash/upperFirst";
@@ -74,6 +74,7 @@ requireComponent.keys().forEach(fileName => {
 });
 // }}}
 
+// Boot Vue + Tera
 (async () => {
 	const router = await initializeRouter();
 	const app = new Vue({
