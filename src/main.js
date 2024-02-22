@@ -1,5 +1,8 @@
-import Vue from "vue";
+import VueInstance from "vue";
 import App from "./App.vue";
+
+// Keep a closure open for this instance (used later in async boot)
+const Vue = VueInstance;
 
 // Disable Vue chattyness
 Vue.config.productionTip = false;
@@ -27,13 +30,14 @@ import "element-ui/lib/theme-chalk/index.css";
 Vue.use(ElementUI);
 
 // Import $tera / @iebh/Tera-fy global service
-import TeraFy from '@iebh/tera-fy/lib/terafy.client.js'; // FIX: Have to be explicit to exactly what we're after as the older version of Vue-cli doesn't resolve it automatically
-import TerafyVue from '@iebh/tera-fy/plugins/vue2';
+// NOTE: See bottom of file inside main async() init loop for when TeraFy actually boots
+import TeraFy from '@iebh/tera-fy/dist/terafy.es2019.js'; // FIX: Use annoyingly old and specific version as Babel struggles with ESNEXT class imports
+import TerafyVue from '@iebh/tera-fy/dist/plugin.vue2.es2019.js';
+
 let terafy = new TeraFy()
-	.set('devMode', true) // Uncomment this line if you want TeraFy to be chatty
-	.set('siteUrl', 'http://localhost:8000/embed') // Uncomment this line if running TERA locally
+	.set('devMode', process.env.VUE_APP_TERAFY_DEV == 1)
+	.setIfDev('siteUrl', process.env.VUE_APP_TERAFY_URL)
 	.use(TerafyVue) // Add the Vue plugin
-	// NOTE: See bottom of file inside main async() init loop for when TeraFy actually boots
 
 // Register all Input/Base Components Globally {{{
 import upperFirst from "lodash/upperFirst";
@@ -85,5 +89,8 @@ requireComponent.keys().forEach(fileName => {
 	app.$mount("#app");
 
 	// Boot teraFy + require project + pull & subscribe to project data
-	await terafy.init({app});
+	await terafy.init({
+		app, // Provide app to bind against
+		Vue, // Provide the vue version to use
+	});
 })();
