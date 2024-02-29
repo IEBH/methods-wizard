@@ -86,11 +86,12 @@ requireComponent.keys().forEach(fileName => {
 		store,
 		render: h => h(App)
 	});
-	app.$mount("#app");
 
 	// Boot teraFy + require project + pull & subscribe to project data
 	await terafy.init({
 		app, // Provide app to bind against
 		Vue, // Provide the vue version to use
 	});
+
+	app.$mount("#app");
 })();
