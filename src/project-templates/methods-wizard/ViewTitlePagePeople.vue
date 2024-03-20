@@ -4,13 +4,13 @@
 
     <InputTextSingleLineMulti
       question="Who are the authors in the study?"
-      :value="$tera.state.author"
+      v-model="$tera.state.author"
       placeholder="e.g. Justin Clark"
     />
 
     <InputTextSingleLineMulti
       question="Who else helped with the study? (Acknowledgements)"
-      :value="$tera.state.acknowledgements"
+      v-model="$tera.state.acknowledgements"
       placeholder="e.g. Justin Clark"
     />
   </div>
